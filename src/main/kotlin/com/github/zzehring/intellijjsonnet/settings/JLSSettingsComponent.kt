@@ -86,11 +86,11 @@ class JLSSettingsComponent {
 
     @NotNull
     fun getLocalLSPPath(): String {
-        return extCodeField.text
+        return localLSPPath.text
     }
 
     fun setLocalLSPPath(newPath: String) {
-        extCodeField.text = newPath
+        localLSPPath.text = newPath
     }
 
     fun getEnableLintDiagnostics(): Boolean {
