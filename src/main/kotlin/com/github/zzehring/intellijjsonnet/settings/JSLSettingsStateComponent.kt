@@ -36,18 +36,6 @@ open class JLSSettingsStateComponent : PersistentStateComponent<JLSSettingsState
         var jPaths = listOf<String>()
         var extCode = ""
         var localLSPPath = ""
-
-        @NotNull
-        fun getExtCodeAsMap(): Map<String, String> {
-            return         this.extCode
-                .split(',')
-                .associateBy(
-                    keySelector = { s: String -> s.split('=')[0] },
-                    valueTransform = {
-                        s: String -> s.split('=')
-                            .getOrElse(1, defaultValue = { "" }) },
-                )
-        }
     }
 
 }

@@ -70,16 +70,6 @@ class JLSSettingsComponent {
         return extCodeField.text
     }
 
-    @NotNull
-    fun getExtCodeAsMap(): Map<String, String> {
-        return         extCodeField.text
-            .split(',')
-            .associateBy(
-                keySelector = { s: String -> s.split('=')[0] },
-                valueTransform = { s: String -> s.split('=').getOrElse(1, defaultValue = { "" }) },
-            )
-    }
-
     fun setExtCode(extcode: String) {
         extCodeField.text = extcode
     }

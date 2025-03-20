@@ -16,6 +16,7 @@ import javax.swing.JPanel
 class JLSSettingsConfigurable(private val project: Project) : Configurable {
 
     private lateinit var mySettingsComponent: JLSSettingsComponent
+    val lspSettingsSync = LSPSettingsSync(project)
 
     @Nullable
     override fun createComponent(): JComponent {
@@ -54,18 +55,7 @@ class JLSSettingsConfigurable(private val project: Project) : Configurable {
         settings.jPaths = mySettingsComponent.getJPaths()
         settings.extCode = mySettingsComponent.getExtCode()
         settings.localLSPPath = mySettingsComponent.getLocalLSPPath()
-
-        val didChangeConfigurationParams = DidChangeConfigurationParams()
-        didChangeConfigurationParams.settings = hashMapOf(
-            "jpath" to mySettingsComponent.getJPaths(),
-            "show_docstring_in_completion" to true,
-            "ext_code" to mySettingsComponent.getExtCodeAsMap()
-        )
-
-        IntellijLanguageClient.didChangeConfiguration(
-            didChangeConfigurationParams,
-            project
-        )
+        lspSettingsSync.sync()
     }
 
     @Nls(capitalization = Nls.Capitalization.Title)

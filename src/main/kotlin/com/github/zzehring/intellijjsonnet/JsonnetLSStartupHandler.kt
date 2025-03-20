@@ -3,6 +3,7 @@ package com.github.zzehring.intellijjsonnet
 import com.github.zzehring.intellijjsonnet.releases.Asset
 import com.github.zzehring.intellijjsonnet.releases.RepoRelease
 import com.github.zzehring.intellijjsonnet.settings.JLSSettingsStateComponent
+import com.github.zzehring.intellijjsonnet.settings.LSPSettingsSync
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationAction
 import com.intellij.notification.NotificationType
@@ -49,6 +50,8 @@ class JsonnetLSStartupHandler {
     private val log = Logger.getInstance(
         LSPProjectManagerListener::class.java
     )
+
+
 
     fun ensureLSPFromGithub() : File {
         val platform = getPlatform()
@@ -106,6 +109,7 @@ class JsonnetLSStartupHandler {
         val localLspPath = JLSSettingsStateComponent.instance.state.localLSPPath
         val extCode = JLSSettingsStateComponent.instance.state.extCode
         val lspBinary = if (localLspPath.isNotEmpty()) File(localLspPath) else ensureLSPFromGithub()
+        val lspSettingsSync = LSPSettingsSync(project)
 
 
         // Configure language server
@@ -134,17 +138,7 @@ class JsonnetLSStartupHandler {
             )
         )
 
-        val didChangeConfigurationParams = DidChangeConfigurationParams()
-        didChangeConfigurationParams.settings = hashMapOf(
-            "jpath" to JLSSettingsStateComponent.instance.state.jPaths,
-            "show_docstring_in_completion" to true,
-            "ext_code" to JLSSettingsStateComponent.instance.state.getExtCodeAsMap()
-        )
-
-        IntellijLanguageClient.didChangeConfiguration(
-            didChangeConfigurationParams,
-            project
-        )
+        lspSettingsSync.sync()
     }
 
     // Returns false if binary version < latest version. True if latest tag is higher
